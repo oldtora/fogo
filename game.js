@@ -1,27 +1,22 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
-// Размер клетки теперь вычисляется динамически
 const gridCount = 20;
 let cellSize = canvas.width / gridCount;
 
-// Загрузка изображения головы змейки (огонёк в очках)
 const headImg = new Image();
-headImg.src = 'fire_head.png'; // Добавьте сюда ваш PNG с огоньком в очках
+headImg.src = 'fire_head.png';
 
 const flameImg = new Image();
 flameImg.src = 'flame.png';
 
-// Загрузка изображения еды
 const mealImg = new Image();
 mealImg.src = 'meal.png';
 
-// Для плавной анимации
 let animSnake = [{ x: 10 * cellSize, y: 10 * cellSize }];
 let animFood = { x: 5 * cellSize, y: 5 * cellSize };
 const lerpSpeed = 0.25;
 
-// Начальные координаты змейки
 let snake = [ { x: 10, y: 10, type: 'head' } ];
 let dx = 1, dy = 0;
 let food = { x: 5, y: 5 };
@@ -48,7 +43,6 @@ function draw() {
   ctx.fillStyle = '#232325';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Рисуем фон-сетку из камней
   for (let y = 0; y < gridCount; y++) {
     for (let x = 0; x < gridCount; x++) {
       ctx.drawImage(
@@ -61,17 +55,14 @@ function draw() {
     }
   }
 
-  // Размер объектов теперь 80% от клетки
   const objSize = cellSize * 0.8;
   const objOffset = (cellSize - objSize) / 2;
 
-  // Размеры для головы и еды
   const headSize = objSize * 2;
   const headOffset = (cellSize - headSize) / 2;
   const foodSize = objSize * 0.8;
   const foodOffset = (cellSize - foodSize) / 2;
 
-  // Еда (meal.png)
   if (mealImg.complete && mealImg.naturalWidth) {
     ctx.drawImage(
       mealImg,
@@ -82,7 +73,6 @@ function draw() {
     );
   }
 
-  // Тело змейки — только цветные flame.png
   for (let i = 1; i < animSnake.length; i++) {
     ctx.drawImage(
       flameImg,
@@ -92,7 +82,6 @@ function draw() {
       objSize
     );
   }
-  // Голова
   ctx.drawImage(
     headImg,
     animSnake[0].x + headOffset,
@@ -101,7 +90,6 @@ function draw() {
     headSize
   );
 
-  // Счёт теперь над игрой, появляется только при старте
   const scorePanel = document.getElementById('score-panel');
   if (scorePanel) {
     scorePanel.textContent = `Score: ${score}`;
@@ -160,7 +148,6 @@ function draw() {
 }
 
 function animate() {
-  // Плавно двигаем сегменты змейки к целевым клеткам
   for (let i = 0; i < snake.length; i++) {
     if (!animSnake[i]) {
       animSnake[i] = { x: snake[i].x * cellSize, y: snake[i].y * cellSize };
@@ -170,7 +157,6 @@ function animate() {
   }
   animSnake.length = snake.length;
 
-  // Плавно двигаем еду
   animFood.x = lerp(animFood.x, food.x * cellSize, lerpSpeed);
   animFood.y = lerp(animFood.y, food.y * cellSize, lerpSpeed);
 
@@ -255,7 +241,6 @@ headImg.onload = function() {
   setInterval(() => { if (waitingStart) draw(); }, 1000/30);
 };
 
-// --- Tweet button logic ---
 let tweetBtn = null;
 function showTweetButton(score) {
   if (!tweetBtn) {
@@ -289,11 +274,9 @@ function hideTweetButton() {
   if (tweetBtn) tweetBtn.style.display = 'none';
 }
 
-// Загрузка изображения камня
 const stoneImg = new Image();
 stoneImg.src = 'stone.png';
 
-// --- Flame popups on click ---
 document.addEventListener('click', function(e) {
   const popups = document.getElementById('flame-popups');
   if (!popups) return;
